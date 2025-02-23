@@ -32,4 +32,5 @@ const BlogSchema = new mongoose.Schema({
 }, {collection:"blog"})
 
 const BlogModel = mongoose.model('blog',BlogSchema)
-module.exports = UserModel    
+
+export default BlogModel
