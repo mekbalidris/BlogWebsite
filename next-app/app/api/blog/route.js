@@ -1,4 +1,5 @@
 import { ConnectDB } from "@/lib/config/db";
+import BlogModel from "@/lib/models/BlogModel";
 import { writeFile } from "fs/promises";
 import { NextResponse } from "next/server";
 
@@ -29,9 +30,19 @@ export async function POST(request) {
         
         await writeFile(path, buffer);
         const imageUrl = `/${timestamp}_${image.name}`;
+
+        const blogData = {
+            title: `${formData.get('title')}`,
+            description: `${formData.get('description')}`,
+            category: `${formData.get('category')}`,
+            author: `${formData.get('author')}`,
+            image: `${imageUrl}`,
+            authorImg: `${formData.get('authorImg')}`
+        }
+
+        await BlogModel.create(blogData)
         
-        console.log(imageUrl);
-        return NextResponse.json({ imageUrl, success: true }, { status: 201 });
+        return NextResponse.json({ success: true, msg:"Blog Added" }, { status: 201 });
     } catch (error) {
         console.error("Error processing upload:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
